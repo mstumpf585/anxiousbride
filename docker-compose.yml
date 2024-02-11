@@ -1,0 +1,40 @@
+version: '3'
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: anxiousbride.Dockerfile
+    ports:
+      - 8080:80
+    container_name: anxiousbride-theme-build
+    # Enable the following line and rebuild to run in privileged mode for access to hardware
+    privileged: true
+    tty: true
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: exampleuser
+      WORDPRESS_DB_PASSWORD: examplepass
+      WORDPRESS_DB_NAME: exampledb
+
+    volumes:
+      - ./:/workspaces/
+      # Enable the /dev to be able to map device hardware to the container.
+      # WARNING: This enables access to all hardware under /dev.
+      - /dev:/dev
+      - wordpress:/var/www/html
+
+  db: 
+    image : mysql:8.0
+    restart: always 
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  wordpress:
+  db:   
+
+
